@@ -1,4 +1,6 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
+import { auth } from './firebase';
+import { onAuthStateChanged, setPersistence, browserLocalPersistence } from 'firebase/auth';
 import { Header } from './components/layout/Header';
 import { TabNavigation } from './components/tabs/TabNavigation';
 import { KeychainCalculator } from './components/tabs/KeychainCalculator';
@@ -18,6 +20,23 @@ const App: React.FC = () => {
     const [activeTab, setActiveTab] = useState<TabId>('keychain');
     const [user, setUser] = useState<User | null>(null);
     const [isAuthModalOpen, setAuthModalOpen] = useState<boolean>(true);
+    const [isLoadingAuth, setIsLoadingAuth] = useState(true);
+
+    // Persistencia de sesión Firebase
+    useEffect(() => {
+        setPersistence(auth, browserLocalPersistence);
+        const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
+            if (firebaseUser) {
+                setUser({ email: firebaseUser.email });
+                setAuthModalOpen(false);
+            } else {
+                setUser(null);
+                setAuthModalOpen(true);
+            }
+            setIsLoadingAuth(false);
+        });
+        return () => unsubscribe();
+    }, []);
 
     const handleLogin = (loggedInUser: User) => {
         setUser(loggedInUser);
@@ -74,7 +93,7 @@ const App: React.FC = () => {
                                         {renderActiveTab()}
                                     </div>
                                     <div className="w-full flex flex-col">
-                                        <ResultsDisplay user={user} />
+                                        <ResultsDisplay />
                                     </div>
                                 </div>
                             </div>
