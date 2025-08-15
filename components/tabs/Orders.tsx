@@ -57,17 +57,20 @@ export const Orders: React.FC<OrdersProps> = ({ user }) => {
         setOrders(orders => orders.map(o => o.id === orderId ? { ...o, estadoPago: estado } : o));
     };
 
+    // Filtrar solo pedidos en cola
+    const pedidosEnCola = orders.filter(order => order.estadoPedido === 'En cola');
+
     return (
         <Card className="max-w-5xl w-full mx-auto">
             <div className="py-8 w-full">
-                <h2 className="text-2xl font-bold text-white text-center mb-6">Pedidos Agendados</h2>
+                <h2 className="text-2xl font-bold text-white text-center mb-6">Pedidos en cola</h2>
                 {loading ? (
                     <div className="text-center text-slate-400">Cargando pedidos...</div>
-                ) : orders.filter(order => order.estadoPedido !== 'Imprimiendo').length === 0 ? (
-                    <div className="text-center text-slate-400">No hay pedidos agendados.</div>
+                ) : pedidosEnCola.length === 0 ? (
+                    <div className="text-center text-slate-400">No hay pedidos en cola.</div>
                 ) : (
                     <div className="space-y-6">
-                        {orders.filter(order => order.estadoPedido !== 'Imprimiendo').map(order => (
+                        {pedidosEnCola.map(order => (
                             <div key={order.id} className="border border-slate-700 rounded-lg p-4 bg-slate-900/80 w-full">
                                 <div className="flex items-center gap-3 mb-2">
                                     <Icon name="person" className="text-slate-400" />
@@ -124,13 +127,9 @@ export const Orders: React.FC<OrdersProps> = ({ user }) => {
                                             className="flex-1 px-4 py-2 bg-brand-accent-500 text-white rounded hover:bg-brand-accent-600 transition w-full flex items-center justify-center"
                                             style={{height: '31px'}}
                                             onClick={() => {
-                                                if(estadoSelect[order.id] === 'Imprimiendo'){
-                                                    handleEstadoChange(order.id, 'Imprimiendo', true);
-                                                } else {
-                                                    handleEstadoChange(order.id, estadoSelect[order.id] || estadosPedido[0]);
-                                                }
+                                                const nuevoEstado = estadoSelect[order.id] || estadosPedido[0];
+                                                handleEstadoChange(order.id, nuevoEstado, true);
                                             }}
-                                            disabled={order.estadoPedido === 'Imprimiendo'}
                                         >
                                             Confirmar
                                         </button>

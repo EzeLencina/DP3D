@@ -9,26 +9,29 @@ import type { GeneralInputs } from '../../types';
 export const GeneralCalculator: React.FC = () => {
     const { calculateGeneral, resetCalculator } = useCalculator();
     const [inputs, setInputs] = useState<GeneralInputs>({
-        grams: 0,
-        hours: 0,
-    });
+        grams: '',
+        hours: '',
+    } as any);
     const [isLoading, setIsLoading] = useState(false);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setInputs({ ...inputs, [e.target.name]: parseFloat(e.target.value) || 0 });
+        setInputs({ ...inputs, [e.target.name]: e.target.value });
     };
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         setIsLoading(true);
         setTimeout(() => {
-            calculateGeneral(inputs);
+            calculateGeneral({
+                grams: parseFloat(inputs.grams) || 0,
+                hours: parseFloat(inputs.hours) || 0,
+            });
             setIsLoading(false);
         }, 500);
     };
     
     const handleReset = () => {
-        setInputs({ grams: 0, hours: 0 });
+        setInputs({ grams: '', hours: '' });
         resetCalculator();
     };
 
@@ -48,6 +51,7 @@ export const GeneralCalculator: React.FC = () => {
                         icon="scale"
                         unit="g"
                         required
+                        placeholder="0"
                     />
                     <Input
                         label="Horas Totales de Impresión"
@@ -61,6 +65,7 @@ export const GeneralCalculator: React.FC = () => {
                         icon="timer"
                         unit="hrs"
                         required
+                        placeholder="0"
                     />
                 </div>
                 <div className="flex flex-col sm:flex-row gap-4 pt-4 border-t border-slate-700">
@@ -68,7 +73,7 @@ export const GeneralCalculator: React.FC = () => {
                         Resetear
                     </Button>
                     <Button type="submit" isLoading={isLoading} icon="calculate">
-                        Calcular Costo y Precio
+                        Calcular Costo
                     </Button>
                 </div>
             </form>

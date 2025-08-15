@@ -1,0 +1,4 @@
+.custom-select-bg select,
+.custom-select-bg option {
+    background-color: #253144 !important;
+}
