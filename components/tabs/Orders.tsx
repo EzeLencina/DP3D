@@ -63,7 +63,7 @@ export const Orders: React.FC<OrdersProps> = ({ user }) => {
     return (
         <div className="flex justify-center w-full">
             <div className="bg-slate-800/50 rounded-xl shadow-lg p-6 sm:p-8 backdrop-blur-sm max-w-3xl w-full mx-auto">
-            <div className="py-8 w-full">
+                    <div className="py-8 w-full">
                 <h2 className="text-2xl font-bold text-white text-center mb-6">Pedidos</h2>
                 {loading ? (
                     <div className="text-center text-slate-400">Cargando pedidos...</div>
