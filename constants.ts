@@ -6,7 +6,8 @@ export const TABS: Tab[] = [
     { id: 'costs', label: 'Costos', icon: 'receipt_long' },
     { id: 'orders', label: 'Pedidos', icon: 'inventory_2' },
     { id: 'encola', label: 'En cola', icon: 'pending_actions' },
-    { id: 'imprimiendo', label: 'Imprimiendo', icon: 'print' }, // Nueva pestaña
+    { id: 'imprimiendo', label: 'Imprimiendo', icon: 'print' },
+    { id: 'novedades', label: 'Novedades', icon: 'new_releases' },
 ];
 
 export const INITIAL_COSTS: CostSettings = {

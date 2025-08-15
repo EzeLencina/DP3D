@@ -1,4 +1,12 @@
-export type TabId = 'keychain' | 'general' | 'costs' | 'orders' | 'encola' | 'imprimiendo' | 'historial';
+export type TabId =
+    'keychain'
+    | 'general'
+    | 'costs'
+    | 'orders'
+    | 'encola'
+    | 'imprimiendo'
+    | 'historial'
+    | 'novedades';
 
 export interface Tab {
     id: TabId;

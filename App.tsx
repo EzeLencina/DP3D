@@ -15,6 +15,7 @@ import AuthModal from './components/auth/AuthModal';
 import { Historial } from './components/tabs/Historial';
 import { EnCola } from './components/tabs/EnCola';
 import { Imprimiendo } from './components/tabs/Imprimiendo';
+import { Novedades } from './components/tabs/Novedades';
 
 const App: React.FC = () => {
     const [activeTab, setActiveTab] = useState<TabId>('keychain');
@@ -35,7 +36,7 @@ const App: React.FC = () => {
             }
             setIsLoadingAuth(false);
         });
-        return () => unsubscribe();
+    return () => unsubscribe();
     }, []);
 
     const handleLogin = (loggedInUser: User) => {
@@ -64,6 +65,8 @@ const App: React.FC = () => {
                 return user ? <Imprimiendo user={user} /> : null;
             case 'historial':
                 return user ? <Historial user={user} /> : null;
+            case 'novedades':
+                return <Novedades />;
             default:
                 return <KeychainCalculator />;
         }
