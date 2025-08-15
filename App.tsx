@@ -89,7 +89,7 @@ const App: React.FC = () => {
                             <div className="w-full">
                                 <TabNavigation tabs={TABS} activeTab={activeTab} setActiveTab={setActiveTab} />
                                 <div className="mt-6 w-full">
-                                    {(activeTab === 'keychain' || activeTab === 'general' || activeTab === 'costs') ? (
+                                    {(activeTab === 'keychain' || activeTab === 'general') ? (
                                         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 w-full">
                                             <div className="w-full flex flex-col items-start">
                                                 {renderActiveTab()}
