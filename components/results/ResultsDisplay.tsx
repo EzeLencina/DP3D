@@ -48,6 +48,10 @@ export const ResultsDisplay: React.FC<ResultsDisplayProps> = ({ user }) => {
 
     const handleSubmit = async () => {
         setError('');
+        if (!user?.email) {
+            setError('Debes iniciar sesión para agendar un pedido.');
+            return;
+        }
         if (!form.nombre.trim() || !form.whatsapp.trim() || !form.fechaEntrega.trim()) {
             setError('Por favor completa los campos obligatorios.');
             return;
@@ -61,7 +65,7 @@ export const ResultsDisplay: React.FC<ResultsDisplayProps> = ({ user }) => {
                 fechaEntrega: Timestamp.fromDate(new Date(form.fechaEntrega)),
                 createdAt: Timestamp.now(),
                 results,
-                userEmail: user?.email || '',
+                userEmail: user.email.trim().toLowerCase(),
             });
             setModalOpen(false);
             setForm({ nombre: '', whatsapp: '', mail: '', instagram: '', fechaEntrega: '' });
