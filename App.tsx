@@ -1,4 +1,6 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
+import { auth } from './firebase';
+import { onAuthStateChanged, setPersistence, browserLocalPersistence } from 'firebase/auth';
 import { Header } from './components/layout/Header';
 import { TabNavigation } from './components/tabs/TabNavigation';
 import { KeychainCalculator } from './components/tabs/KeychainCalculator';
@@ -18,6 +20,23 @@ const App: React.FC = () => {
     const [activeTab, setActiveTab] = useState<TabId>('keychain');
     const [user, setUser] = useState<User | null>(null);
     const [isAuthModalOpen, setAuthModalOpen] = useState<boolean>(true);
+    const [isLoadingAuth, setIsLoadingAuth] = useState(true);
+
+    // Persistencia de sesión Firebase
+    useEffect(() => {
+        setPersistence(auth, browserLocalPersistence);
+        const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
+            if (firebaseUser) {
+                setUser({ email: firebaseUser.email });
+                setAuthModalOpen(false);
+            } else {
+                setUser(null);
+                setAuthModalOpen(true);
+            }
+            setIsLoadingAuth(false);
+        });
+        return () => unsubscribe();
+    }, []);
 
     const handleLogin = (loggedInUser: User) => {
         setUser(loggedInUser);
@@ -57,39 +76,48 @@ const App: React.FC = () => {
 
     return (
         <CalculatorProvider>
-            <div className="min-h-screen bg-slate-900 text-slate-200 font-sans p-4 sm:p-6 lg:p-8">
-                <div className="max-w-7xl mx-auto">
-                    <Header
-                        user={user}
-                        onLogout={handleLogout}
-                        onLoginClick={() => setAuthModalOpen(true)}
-                        onHistorialClick={handleHistorialClick}
-                    />
-                    {user ? (
-                        <main className="mt-8 flex flex-col gap-8 items-start">
-                            <div className="w-full">
-                                <TabNavigation tabs={TABS} activeTab={activeTab} setActiveTab={setActiveTab} />
-                                <div className="mt-6 grid grid-cols-1 lg:grid-cols-2 gap-8">
-                                    <div className="w-full flex flex-col items-start">
-                                        {renderActiveTab()}
-                                    </div>
-                                    <div className="w-full flex flex-col">
-                                        <ResultsDisplay />
+            {isLoadingAuth ? (
+                <div className="min-h-screen flex items-center justify-center bg-slate-900 text-slate-200">
+                    <div className="text-center">
+                        <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-brand-accent-500 mx-auto mb-6"></div>
+                        <h2 className="text-xl font-bold">Cargando...</h2>
+                    </div>
+                </div>
+            ) : (
+                <div className="min-h-screen bg-slate-900 text-slate-200 font-sans p-4 sm:p-6 lg:p-8">
+                    <div className="max-w-7xl mx-auto">
+                        <Header
+                            user={user}
+                            onLogout={handleLogout}
+                            onLoginClick={() => setAuthModalOpen(true)}
+                            onHistorialClick={handleHistorialClick}
+                        />
+                        {user ? (
+                            <main className="mt-8 flex flex-col gap-8 items-start">
+                                <div className="w-full">
+                                    <TabNavigation tabs={TABS} activeTab={activeTab} setActiveTab={setActiveTab} />
+                                    <div className="mt-6 grid grid-cols-1 lg:grid-cols-2 gap-8">
+                                        <div className="w-full flex flex-col items-start">
+                                            {renderActiveTab()}
+                                        </div>
+                                        <div className="w-full flex flex-col">
+                                            <ResultsDisplay />
+                                        </div>
                                     </div>
                                 </div>
+                            </main>
+                        ) : (
+                            <div className="text-center mt-20">
+                                <h2 className="text-3xl font-bold text-white">Welcome to Dimensional Print</h2>
+                                <p className="mt-4 text-slate-400">Please log in to use the calculator.</p>
+                                <button onClick={() => setAuthModalOpen(true)} className="mt-6 bg-brand-accent-600 hover:bg-brand-accent-700 text-white font-bold py-2 px-4 rounded-lg transition-colors">
+                                    Login / Register
+                                </button>
                             </div>
-                        </main>
-                    ) : (
-                        <div className="text-center mt-20">
-                            <h2 className="text-3xl font-bold text-white">Welcome to Dimensional Print</h2>
-                            <p className="mt-4 text-slate-400">Please log in to use the calculator.</p>
-                            <button onClick={() => setAuthModalOpen(true)} className="mt-6 bg-brand-accent-600 hover:bg-brand-accent-700 text-white font-bold py-2 px-4 rounded-lg transition-colors">
-                                Login / Register
-                            </button>
-                        </div>
-                    )}
+                        )}
+                    </div>
                 </div>
-            </div>
+            )}
             {isAuthModalOpen && <AuthModal onLogin={handleLogin} onClose={() => setAuthModalOpen(false)} />}
         </CalculatorProvider>
     );
