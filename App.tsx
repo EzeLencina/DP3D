@@ -36,7 +36,13 @@ const App: React.FC = () => {
             }
             setIsLoadingAuth(false);
         });
-    return () => unsubscribe();
+        // Listener para ir al home (calculadora de llaveros)
+        const irHomeListener = () => setActiveTab('keychain');
+        window.addEventListener('irHomeDP3D', irHomeListener);
+        return () => {
+            unsubscribe();
+            window.removeEventListener('irHomeDP3D', irHomeListener);
+        };
     }, []);
 
     const handleLogin = (loggedInUser: User) => {

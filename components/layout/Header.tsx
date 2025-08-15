@@ -19,9 +19,16 @@ export const Header: React.FC<HeaderProps> = ({ user, onLogout, onLoginClick, on
         <header className="flex justify-between items-center pb-4 border-b border-slate-700/50">
             <div className="flex items-center gap-3">
                 <Icon name="3d_rotation" className="text-4xl text-brand-accent-500" />
-                <h1 className="text-2xl font-bold text-white tracking-tight">
-                    Dimensional Print
-                </h1>
+                <button
+                    className="text-2xl font-bold text-white tracking-tight focus:outline-none hover:text-brand-accent-400 transition-colors"
+                    onClick={() => {
+                        const event = new CustomEvent('irHomeDP3D');
+                        window.dispatchEvent(event);
+                    }}
+                    title="Ir al Home (Calculadora de Llaveros)"
+                >
+                    DP3D
+                </button>
             </div>
             <div className="relative flex items-center gap-4">
                 {/* Botón Historial */}
