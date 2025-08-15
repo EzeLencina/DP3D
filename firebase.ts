@@ -1,9 +1,16 @@
+// Declaración de tipo para variables de entorno Vite
+interface ImportMetaEnv {
+  VITE_FIREBASE_API_KEY: string;
+}
+interface ImportMeta {
+  env: ImportMetaEnv;
+}
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyB60Y_iBA-KLVC15qTzTXYFbKSN-OZy1hA",
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
   authDomain: "cacl3d.firebaseapp.com",
   projectId: "cacl3d",
   storageBucket: "cacl3d.appspot.com",
