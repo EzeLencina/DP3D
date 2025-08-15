@@ -93,7 +93,7 @@ const App: React.FC = () => {
                                         {renderActiveTab()}
                                     </div>
                                     <div className="w-full flex flex-col">
-                                        <ResultsDisplay />
+                                        <ResultsDisplay user={user} />
                                     </div>
                                 </div>
                             </div>
