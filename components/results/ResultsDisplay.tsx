@@ -60,17 +60,20 @@ export const ResultsDisplay: React.FC<ResultsDisplayProps> = ({ user }) => {
         try {
             const { db } = await import('../../firebase');
             const { collection, addDoc, Timestamp } = await import('firebase/firestore');
-            await addDoc(collection(db, 'orders'), {
+            const docRef = await addDoc(collection(db, 'orders'), {
                 ...form,
                 fechaEntrega: Timestamp.fromDate(new Date(form.fechaEntrega)),
                 createdAt: Timestamp.now(),
                 results,
                 userEmail: user.email.trim().toLowerCase(),
+                estadoPedido: 'En cola',
             });
+            console.log('Pedido guardado correctamente con ID:', docRef.id);
             setModalOpen(false);
             setForm({ nombre: '', whatsapp: '', mail: '', instagram: '', fechaEntrega: '' });
         } catch (err) {
             setError('Error al guardar el pedido.');
+            console.error('Error al guardar el pedido:', err);
         }
         setLoading(false);
     };
