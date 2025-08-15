@@ -26,7 +26,7 @@ interface ResultsDisplayProps {
 }
 
 export const ResultsDisplay: React.FC<ResultsDisplayProps> = ({ user }) => {
-    const { state } = useCalculator();
+    const { state, resetCalculator, resetInputs } = useCalculator();
     const { results, isCalculated } = state;
     const [modalOpen, setModalOpen] = React.useState(false);
     const [form, setForm] = React.useState({
@@ -71,6 +71,9 @@ export const ResultsDisplay: React.FC<ResultsDisplayProps> = ({ user }) => {
             console.log('Pedido guardado correctamente con ID:', docRef.id);
             setModalOpen(false);
             setForm({ nombre: '', whatsapp: '', mail: '', instagram: '', fechaEntrega: '' });
+            // Limpiar resultados y inputs de la calculadora
+            if (typeof resetCalculator === 'function') resetCalculator();
+            if (typeof resetInputs === 'function') resetInputs();
         } catch (err) {
             setError('Error al guardar el pedido.');
             console.error('Error al guardar el pedido:', err);

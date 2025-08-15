@@ -9,7 +9,7 @@ import { Button } from '../ui/Button';
 import type { KeychainInputs } from '../../types';
 
 export const KeychainCalculator: React.FC = () => {
-    const { calculateKeychain, resetCalculator, state, updateCosts } = useCalculator();
+    const { calculateKeychain, resetCalculator, state, updateCosts, setResetInputs } = useCalculator();
     const [inputs, setInputs] = useState<KeychainInputs>({
         hoursPerBed: 0,
         gramsPerBed: 0,
@@ -54,10 +54,25 @@ export const KeychainCalculator: React.FC = () => {
             gramsPerBed: 0,
             keychainsPerBed: 0,
             numberOfBeds: 0,
-            colorCount: 2,
+            colorCount: '',
         });
         resetCalculator();
-    }
+    };
+
+    React.useEffect(() => {
+        if (setResetInputs) {
+            setResetInputs(() => {
+                setInputs({
+                    hoursPerBed: 0,
+                    gramsPerBed: 0,
+                    keychainsPerBed: 0,
+                    numberOfBeds: 0,
+                    colorCount: '',
+                });
+                resetCalculator();
+            });
+        }
+    }, [setResetInputs, setInputs, resetCalculator]);
 
     return (
         <Card>

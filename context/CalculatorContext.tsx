@@ -144,13 +144,15 @@ interface CalculatorContextType {
     calculateKeychain: (payload: KeychainInputs) => void;
     calculateGeneral: (payload: GeneralInputs) => void;
     resetCalculator: () => void;
+    resetInputs?: () => void;
+    setResetInputs?: (fn: () => void) => void;
 }
 
 const CalculatorContext = createContext<CalculatorContextType | undefined>(undefined);
 
 export const CalculatorProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const [state, dispatch] = useReducer(reducer, initialState);
-    
+
     const updateCosts = useCallback((payload: Partial<CostSettings>) => {
         dispatch({ type: 'UPDATE_COSTS', payload });
     }, []);
@@ -162,13 +164,22 @@ export const CalculatorProvider: React.FC<{ children: React.ReactNode }> = ({ ch
     const calculateGeneral = useCallback((payload: GeneralInputs) => {
         dispatch({ type: 'CALCULATE_GENERAL', payload });
     }, []);
-    
+
     const resetCalculator = useCallback(() => {
         dispatch({ type: 'RESET' });
     }, []);
 
+    // Referencia para resetear los inputs desde fuera
+    const resetInputsRef = React.useRef<() => void>();
+    const setResetInputs = (fn: () => void) => {
+        resetInputsRef.current = fn;
+    };
+    const resetInputs = () => {
+        if (resetInputsRef.current) resetInputsRef.current();
+    };
+
     return (
-        <CalculatorContext.Provider value={{ state, dispatch, updateCosts, calculateKeychain, calculateGeneral, resetCalculator }}>
+        <CalculatorContext.Provider value={{ state, dispatch, updateCosts, calculateKeychain, calculateGeneral, resetCalculator, resetInputs, setResetInputs }}>
             {children}
         </CalculatorContext.Provider>
     );
