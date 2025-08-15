@@ -38,13 +38,13 @@ const App: React.FC = () => {
             case 'costs':
                 return <CostsEditor />;
             case 'orders':
-                return <Orders />;
+                return user ? <Orders user={user} /> : null;
             case 'encola':
-                return <EnCola />;
+                return user ? <EnCola user={user} /> : null;
             case 'imprimiendo':
-                return <Imprimiendo />;
+                return user ? <Imprimiendo user={user} /> : null;
             case 'historial':
-                return <Historial />;
+                return user ? <Historial user={user} /> : null;
             default:
                 return <KeychainCalculator />;
         }
@@ -74,7 +74,7 @@ const App: React.FC = () => {
                                         {renderActiveTab()}
                                     </div>
                                     <div className="w-full flex flex-col">
-                                        <ResultsDisplay />
+                                        <ResultsDisplay user={user} />
                                     </div>
                                 </div>
                             </div>

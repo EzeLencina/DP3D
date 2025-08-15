@@ -2,7 +2,13 @@ import React from 'react';
 import { Card } from '../ui/Card';
 import { Icon } from '../ui/Icon';
 
-export const EnCola: React.FC = () => {
+import type { User } from '../../types';
+
+interface EnColaProps {
+    user: User;
+}
+
+export const EnCola: React.FC<EnColaProps> = ({ user }) => {
     const [deleteId, setDeleteId] = React.useState<string|null>(null);
     const [showConfirm, setShowConfirm] = React.useState(false);
 
@@ -21,15 +27,19 @@ export const EnCola: React.FC = () => {
         let unsub: any;
         (async () => {
             const { db } = await import('../../firebase');
-            const { collection, onSnapshot, query, orderBy } = await import('firebase/firestore');
-            const q = query(collection(db, 'orders'), orderBy('createdAt', 'desc'));
+            const { collection, onSnapshot, query, orderBy, where } = await import('firebase/firestore');
+            const q = query(
+                collection(db, 'orders'),
+                where('userEmail', '==', user.email),
+                orderBy('createdAt', 'desc')
+            );
             unsub = onSnapshot(q, (snap) => {
                 setOrders(snap.docs.map(doc => ({ id: doc.id, ...doc.data() })));
                 setLoading(false);
             });
         })();
         return () => { if (unsub) unsub(); };
-    }, []);
+    }, [user]);
 
     // Filtrar pedidos en estado 'Imprimiendo'
     const enCola = orders.filter(o => o.estadoPedido === 'Imprimiendo');

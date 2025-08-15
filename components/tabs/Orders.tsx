@@ -1,8 +1,13 @@
 import React from 'react';
+import type { User } from '../../types';
 import { Card } from '../ui/Card';
 import { Icon } from '../ui/Icon';
 
-export const Orders: React.FC = () => {
+interface OrdersProps {
+    user: User;
+}
+
+export const Orders: React.FC<OrdersProps> = ({ user }) => {
     const [orders, setOrders] = React.useState<any[]>([]);
     const [loading, setLoading] = React.useState(true);
     const [estadoSelect, setEstadoSelect] = React.useState<{[id:string]:string}>({});
@@ -13,26 +18,29 @@ export const Orders: React.FC = () => {
         let unsub: any;
         (async () => {
             const { db } = await import('../../firebase');
-            const { collection, onSnapshot, query, orderBy } = await import('firebase/firestore');
-            const q = query(collection(db, 'orders'), orderBy('createdAt', 'desc'));
+            const { collection, onSnapshot, query, orderBy, where } = await import('firebase/firestore');
+            const q = query(
+                collection(db, 'orders'),
+                where('userEmail', '==', user.email),
+                orderBy('createdAt', 'desc')
+            );
             unsub = onSnapshot(q, (snap) => {
-                                const nuevos = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                                setOrders(nuevos);
-                                // Actualizar estadoSelect para reflejar el estado actual de cada pedido
-                                setEstadoSelect(
-                                    prev => {
-                                        const obj: {[id:string]:string} = {};
-                                        nuevos.forEach(order => {
-                                            obj[order.id] = (order as any).estadoPedido || estadosPedido[0];
-                                        });
-                                        return obj;
-                                    }
-                                );
-                                setLoading(false);
+                const nuevos = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                setOrders(nuevos);
+                setEstadoSelect(
+                    prev => {
+                        const obj: {[id:string]:string} = {};
+                        nuevos.forEach(order => {
+                            obj[order.id] = (order as any).estadoPedido || estadosPedido[0];
+                        });
+                        return obj;
+                    }
+                );
+                setLoading(false);
             });
         })();
         return () => { if (unsub) unsub(); };
-    }, []);
+    }, [user]);
 
     const handleEstadoChange = async (orderId: string, estado: string, confirmar = false) => {
     if (estado === 'Imprimiendo' && !confirmar) return;

@@ -1,7 +1,13 @@
 import React from 'react';
 import { Card } from '../ui/Card';
 
-export const Imprimiendo: React.FC = () => {
+import type { User } from '../../types';
+
+interface ImprimiendoProps {
+    user: User;
+}
+
+export const Imprimiendo: React.FC<ImprimiendoProps> = ({ user }) => {
     const [orders, setOrders] = React.useState<any[]>([]);
     const [loading, setLoading] = React.useState(true);
 
@@ -9,15 +15,19 @@ export const Imprimiendo: React.FC = () => {
         let unsub: any;
         (async () => {
             const { db } = await import('../../firebase');
-            const { collection, onSnapshot, query, orderBy } = await import('firebase/firestore');
-            const q = query(collection(db, 'orders'), orderBy('createdAt', 'desc'));
+            const { collection, onSnapshot, query, orderBy, where } = await import('firebase/firestore');
+            const q = query(
+                collection(db, 'orders'),
+                where('userEmail', '==', user.email),
+                orderBy('createdAt', 'desc')
+            );
             unsub = onSnapshot(q, (snap) => {
                 setOrders(snap.docs.map(doc => ({ id: doc.id, ...doc.data() })));
                 setLoading(false);
             });
         })();
         return () => { if (unsub) unsub(); };
-    }, []);
+    }, [user]);
 
     // Filtrar pedidos en estado 'Imprimiendo'
     const imprimiendo = orders.filter(o => o.estadoPedido === 'Imprimiendo');

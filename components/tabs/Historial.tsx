@@ -2,7 +2,13 @@ import React from 'react';
 import jsPDF from 'jspdf';
 import { Card } from '../ui/Card';
 
-export const Historial: React.FC = () => {
+import type { User } from '../../types';
+
+interface HistorialProps {
+    user: User;
+}
+
+export const Historial: React.FC<HistorialProps> = ({ user }) => {
     const [orders, setOrders] = React.useState<any[]>([]);
     const [loading, setLoading] = React.useState(true);
 
@@ -10,15 +16,19 @@ export const Historial: React.FC = () => {
         let unsub: any;
         (async () => {
             const { db } = await import('../../firebase');
-            const { collection, onSnapshot, query, orderBy } = await import('firebase/firestore');
-            const q = query(collection(db, 'orders'), orderBy('createdAt', 'desc'));
+            const { collection, onSnapshot, query, orderBy, where } = await import('firebase/firestore');
+            const q = query(
+                collection(db, 'orders'),
+                where('userEmail', '==', user.email),
+                orderBy('createdAt', 'desc')
+            );
             unsub = onSnapshot(q, (snap) => {
                 setOrders(snap.docs.map(doc => ({ id: doc.id, ...doc.data() })));
                 setLoading(false);
             });
         })();
         return () => { if (unsub) unsub(); };
-    }, []);
+    }, [user]);
 
     // Filtrar pedidos en estado 'Historial'
     const historial = orders.filter(o => o.estadoPedido === 'Historial');

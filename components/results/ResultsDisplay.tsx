@@ -19,7 +19,13 @@ const ResultRow: React.FC<{ icon: string; label: string; value: string; isVisibl
     );
 };
 
-export const ResultsDisplay: React.FC = () => {
+import type { User } from '../../types';
+
+interface ResultsDisplayProps {
+    user: User;
+}
+
+export const ResultsDisplay: React.FC<ResultsDisplayProps> = ({ user }) => {
     const { state } = useCalculator();
     const { results, isCalculated } = state;
     const [modalOpen, setModalOpen] = React.useState(false);
@@ -55,6 +61,7 @@ export const ResultsDisplay: React.FC = () => {
                 fechaEntrega: Timestamp.fromDate(new Date(form.fechaEntrega)),
                 createdAt: Timestamp.now(),
                 results,
+                userEmail: user?.email || '',
             });
             setModalOpen(false);
             setForm({ nombre: '', whatsapp: '', mail: '', instagram: '', fechaEntrega: '' });
