@@ -1,0 +1,54 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dimensional Print - 3D Print Cost Calculator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <script>
+      // Set dark mode as default
+      document.documentElement.classList.add("dark");
+      tailwind.config = {
+        darkMode: 'class',
+        theme: {
+          extend: {
+            colors: {
+              'brand-accent': {
+                '50': '#eff8ff',
+                '100': '#dff0ff',
+                '200': '#bce5ff',
+                '300': '#8ad8ff',
+                '400': '#54c1ff',
+                '500': '#2ba8ff',
+                '600': '#168eff',
+                '700': '#0d71f8',
+                '800': '#115ad5',
+                '900': '#154ca9',
+                '950': '#112f6a',
+              },
+            }
+          }
+        }
+      }
+    </script>
+  <script type="importmap">
+{
+  "imports": {
+    "react-dom/": "https://esm.sh/react-dom@^19.1.1/",
+    "react/": "https://esm.sh/react@^19.1.1/",
+    "react": "https://esm.sh/react@^19.1.1"
+  }
+}
+</script>
+<link rel="stylesheet" href="/index.css">
+</head>
+  <body class="bg-slate-900">
+
+  <div id="root"></div>
+  <script type="module" src="index.tsx"></script>
+
+  <script type="module" src="/index.tsx"></script>
+</body>
+</html>
