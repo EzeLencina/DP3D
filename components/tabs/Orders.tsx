@@ -57,20 +57,21 @@ export const Orders: React.FC<OrdersProps> = ({ user }) => {
         setOrders(orders => orders.map(o => o.id === orderId ? { ...o, estadoPago: estado } : o));
     };
 
-    // Filtrar solo pedidos en cola
-    const pedidosEnCola = orders.filter(order => order.estadoPedido === 'En cola');
+    // Filtrar solo pedidos pendientes
+    const pedidosPendientes = orders.filter(order => order.estadoPedido === 'Pendiente');
 
     return (
-        <Card className="max-w-5xl w-full mx-auto">
+        <div className="flex justify-center w-full">
+            <div className="bg-slate-800/50 rounded-xl shadow-lg p-6 sm:p-8 backdrop-blur-sm max-w-3xl w-full mx-auto">
             <div className="py-8 w-full">
-                <h2 className="text-2xl font-bold text-white text-center mb-6">Pedidos en cola</h2>
+                <h2 className="text-2xl font-bold text-white text-center mb-6">Pedidos</h2>
                 {loading ? (
                     <div className="text-center text-slate-400">Cargando pedidos...</div>
-                ) : pedidosEnCola.length === 0 ? (
-                    <div className="text-center text-slate-400">No hay pedidos en cola.</div>
+                ) : pedidosPendientes.length === 0 ? (
+                    <div className="text-center text-slate-400">No hay pedidos pendientes.</div>
                 ) : (
                     <div className="space-y-6">
-                        {pedidosEnCola.map(order => (
+                        {pedidosPendientes.map(order => (
                             <div key={order.id} className="border border-slate-700 rounded-lg p-4 bg-slate-900/80 w-full">
                                 <div className="flex items-center gap-3 mb-2">
                                     <Icon name="person" className="text-slate-400" />
@@ -108,31 +109,24 @@ export const Orders: React.FC<OrdersProps> = ({ user }) => {
                                 </div>
                                 <div className="flex gap-4 mb-2">
                                     <div className="flex flex-col w-full md:flex-row md:items-end gap-2">
-                                        <div className="flex-1">
-                                            <label className="block text-xs text-slate-400 mb-1">Estado pedido</label>
-                                            <select
-                                                className="bg-slate-800 text-white rounded px-2 py-1 w-full"
-                                                value={estadoSelect[order.id] || estadosPedido[0]}
-                                                onChange={e => {
-                                                    setEstadoSelect(prev => ({ ...prev, [order.id]: e.target.value }));
-                                                }}
+                                        <div className="flex flex-row gap-2 w-full">
+                                            <button
+                                                className="flex-1 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition w-full flex items-center justify-center"
+                                                style={{height: '31px'}}
+                                                onClick={() => handleEstadoChange(order.id, 'En cola', true)}
+                                                disabled={order.estadoPedido === 'En cola'}
+                                            >
+                                                En Cola
+                                            </button>
+                                            <button
+                                                className="flex-1 px-4 py-2 bg-yellow-600 text-white rounded hover:bg-yellow-700 transition w-full flex items-center justify-center"
+                                                style={{height: '31px'}}
+                                                onClick={() => handleEstadoChange(order.id, 'Imprimiendo', true)}
                                                 disabled={order.estadoPedido === 'Imprimiendo'}
                                             >
-                                                {estadosPedido.map(opt => (
-                                                    <option key={opt} value={opt}>{opt}</option>
-                                                ))}
-                                            </select>
+                                                Imprimiendo
+                                            </button>
                                         </div>
-                                        <button
-                                            className="flex-1 px-4 py-2 bg-brand-accent-500 text-white rounded hover:bg-brand-accent-600 transition w-full flex items-center justify-center"
-                                            style={{height: '31px'}}
-                                            onClick={() => {
-                                                const nuevoEstado = estadoSelect[order.id] || estadosPedido[0];
-                                                handleEstadoChange(order.id, nuevoEstado, true);
-                                            }}
-                                        >
-                                            Confirmar
-                                        </button>
                                     </div>
                                 </div>
                                 <div className="mt-2 text-slate-200">
@@ -163,6 +157,7 @@ export const Orders: React.FC<OrdersProps> = ({ user }) => {
                     </div>
                 )}
             </div>
-        </Card>
+        </div>
+        </div>
     );
 };

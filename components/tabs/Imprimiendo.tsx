@@ -33,7 +33,7 @@ export const Imprimiendo: React.FC<ImprimiendoProps> = ({ user }) => {
     const imprimiendo = orders.filter(o => o.estadoPedido === 'Imprimiendo');
 
     return (
-        <Card className="max-w-5xl w-full mx-auto">
+    <Card className="w-full">
             <div className="py-8 w-full">
                 <h2 className="text-2xl font-bold text-white text-center mb-6">Pedidos Imprimiendo</h2>
                 {loading ? (

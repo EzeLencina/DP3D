@@ -33,8 +33,16 @@ export const Historial: React.FC<HistorialProps> = ({ user }) => {
     // Filtrar pedidos en estado 'Historial'
     const historial = orders.filter(o => o.estadoPedido === 'Historial');
 
+        // Eliminar pedido del historial
+        const handleDelete = async (orderId: string) => {
+            const { db } = await import('../../firebase');
+            const { doc, deleteDoc } = await import('firebase/firestore');
+            await deleteDoc(doc(db, 'orders', orderId));
+            setOrders(orders => orders.filter(o => o.id !== orderId));
+        };
+
     return (
-        <Card className="max-w-5xl w-full mx-auto">
+    <Card className="w-full">
             <div className="py-8">
                 <h2 className="text-2xl font-bold text-white text-center mb-6">Historial de pedidos</h2>
                 {loading ? (
@@ -94,6 +102,12 @@ export const Historial: React.FC<HistorialProps> = ({ user }) => {
                                     >
                                         Enviar factura
                                     </button>
+                                       <button
+                                           className="bg-red-600 hover:bg-red-700 text-white font-semibold px-3 h-10 rounded-lg transition-colors text-sm w-full"
+                                           onClick={() => handleDelete(order.id)}
+                                       >
+                                           Eliminar
+                                       </button>
                                 </div>
                             </div>
                         ))}

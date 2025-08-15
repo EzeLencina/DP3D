@@ -41,11 +41,11 @@ export const EnCola: React.FC<EnColaProps> = ({ user }) => {
         return () => { if (unsub) unsub(); };
     }, [user]);
 
-    // Filtrar pedidos en estado 'Imprimiendo'
-    const enCola = orders.filter(o => o.estadoPedido === 'Imprimiendo');
+        // Filtrar pedidos en estado 'En cola'
+        const enCola = orders.filter(o => o.estadoPedido === 'En cola');
 
     return (
-        <Card className="max-w-5xl w-full mx-auto">
+    <Card className="w-full">
             <div className="py-8 w-full">
                 <h2 className="text-2xl font-bold text-white text-center mb-6">Pedidos en cola</h2>
                 {loading ? (

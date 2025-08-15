@@ -66,7 +66,7 @@ export const ResultsDisplay: React.FC<ResultsDisplayProps> = ({ user }) => {
                 createdAt: Timestamp.now(),
                 results,
                 userEmail: user.email.trim().toLowerCase(),
-                estadoPedido: 'En cola',
+                estadoPedido: 'Pendiente',
             });
             console.log('Pedido guardado correctamente con ID:', docRef.id);
             setModalOpen(false);
