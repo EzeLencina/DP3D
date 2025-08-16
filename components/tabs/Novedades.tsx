@@ -94,8 +94,9 @@ export const Novedades: React.FC<NovedadesProps> = ({ user }) => {
                         return (
                             <li key={update.id} className="flex items-start gap-2">
                                 <div className="flex-1">
-                                    <span className="font-bold text-brand-accent-400">{update.title}</span>:
-                                    <pre className="whitespace-pre-wrap break-words text-slate-200 inline">{update.description}</pre>
+                                        <div className="font-bold text-brand-accent-400 text-lg" style={{ fontFamily: 'DM Sans, sans-serif' }}>{update.title}</div>
+                                        <div className="h-3" />
+                                        <pre className="whitespace-pre-wrap break-words text-slate-200" style={{ fontFamily: 'DM Sans, sans-serif' }}>{update.description}</pre>
                                     <span className="ml-2 text-xs text-slate-400">{fecha}</span>
                                 </div>
                                 {user?.admin && (
