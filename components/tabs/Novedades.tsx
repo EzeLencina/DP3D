@@ -82,36 +82,38 @@ export const Novedades: React.FC<NovedadesProps> = ({ user }) => {
                     {message && <p className="mt-4 text-brand-accent-400">{message}</p>}
                 </div>
             )}
-            <div className="bg-slate-800 rounded-lg p-6 shadow">
-                <h2 className="text-2xl font-bold text-brand-accent-400 mb-4">Novedades</h2>
-                <ul className="list-disc pl-6 text-slate-200 space-y-2">
-                    {updates.map(update => {
-                        let fecha = '';
-                        if (update.createdAt && typeof update.createdAt.toDate === 'function') {
-                            const d = update.createdAt.toDate();
-                            fecha = `${d.getDate().toString().padStart(2, '0')}/${(d.getMonth()+1).toString().padStart(2, '0')}/${d.getFullYear()} ${d.getHours().toString().padStart(2, '0')}:${d.getMinutes().toString().padStart(2, '0')}`;
-                        }
-                        return (
-                            <li key={update.id} className="flex items-start gap-2">
-                                <div className="flex-1">
-                                        <div className="font-bold text-brand-accent-400 text-lg" style={{ fontFamily: 'DM Sans, sans-serif' }}>{update.title}</div>
-                                        <div className="h-3" />
-                                        <pre className="whitespace-pre-wrap break-words text-slate-200" style={{ fontFamily: 'DM Sans, sans-serif' }}>{update.description}</pre>
-                                    <span className="ml-2 text-xs text-slate-400">{fecha}</span>
-                                </div>
-                                {user?.admin && (
-                                    <button
-                                        onClick={() => handleDelete(update.id)}
-                                        className="ml-2 px-2 py-1 text-xs bg-red-600 hover:bg-red-800 text-white rounded"
-                                        title="Eliminar novedad"
-                                    >
-                                        Eliminar
-                                    </button>
-                                )}
-                            </li>
-                        );
-                    })}
-                </ul>
+            <div className="w-full flex justify-center mb-6">
+                <div className="bg-slate-800 rounded-lg px-8 py-4 shadow w-full max-w-2xl">
+                    <h2 className="text-3xl font-bold text-brand-accent-400 text-center" style={{ fontFamily: 'DM Sans, sans-serif' }}>Novedades</h2>
+                </div>
+            </div>
+            <div className="flex flex-col gap-6">
+                {updates.map(update => {
+                    let fecha = '';
+                    if (update.createdAt && typeof update.createdAt.toDate === 'function') {
+                        const d = update.createdAt.toDate();
+                        fecha = `${d.getDate().toString().padStart(2, '0')}/${(d.getMonth()+1).toString().padStart(2, '0')}/${d.getFullYear()} ${d.getHours().toString().padStart(2, '0')}:${d.getMinutes().toString().padStart(2, '0')}`;
+                    }
+                    return (
+                        <div key={update.id} className="bg-slate-800 rounded-lg p-6 shadow flex items-start gap-2">
+                            <div className="flex-1">
+                                <div className="font-bold text-brand-accent-400 text-lg" style={{ fontFamily: 'DM Sans, sans-serif' }}>{update.title}</div>
+                                <div className="h-3" />
+                                <pre className="whitespace-pre-wrap break-words text-slate-200" style={{ fontFamily: 'DM Sans, sans-serif' }}>{update.description}</pre>
+                                <span className="ml-2 text-xs text-slate-400">{fecha}</span>
+                            </div>
+                            {user?.admin && (
+                                <button
+                                    onClick={() => handleDelete(update.id)}
+                                    className="ml-2 px-2 py-1 text-xs bg-red-600 hover:bg-red-800 text-white rounded"
+                                    title="Eliminar novedad"
+                                >
+                                    Eliminar
+                                </button>
+                            )}
+                        </div>
+                    );
+                })}
             </div>
         </div>
     );
