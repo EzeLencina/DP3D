@@ -163,47 +163,51 @@ export const Header: React.FC<HeaderProps> = ({ user, onLogout, onLoginClick, on
                             <Icon name="history" className="text-lg" />
                             Historial
                         </button>
-                        <button 
-                            onClick={() => setMenuOpen(!isMenuOpen)}
-                            className="flex items-center gap-2 p-2 rounded-lg hover:bg-slate-800 transition-colors"
-                            ref={triggerRef}
-                        >
-                            <span className="font-medium text-sm text-slate-300">{user.email}</span>
-                            {auth.currentUser?.photoURL ? (
-                                <div className="w-8 h-8 rounded-full overflow-hidden flex items-center justify-center bg-slate-800">
-                                    <img src={auth.currentUser.photoURL} alt="Foto de perfil" className="w-full h-full object-cover" style={{objectFit: 'cover', width: '100%', height: '100%'}} />
-                                </div>
-                            ) : (
-                                <div className="w-8 h-8 rounded-full bg-brand-accent-800 flex items-center justify-center text-white font-bold text-sm">
-                                    {user.email.charAt(0).toUpperCase()}
+                        {/* Botón mail + foto: muestra menú de cuenta al hacer clic en cualquier parte */}
+                        <div className="relative">
+                            <button 
+                                onClick={() => setMenuOpen(!isMenuOpen)}
+                                className="flex items-center gap-2 p-2 rounded-lg hover:bg-slate-800 transition-colors"
+                                ref={triggerRef}
+                                type="button"
+                            >
+                                <span className="font-medium text-sm text-slate-300">{user.email}</span>
+                                {auth.currentUser?.photoURL ? (
+                                    <div className="w-8 h-8 rounded-full overflow-hidden flex items-center justify-center bg-slate-800">
+                                        <img src={auth.currentUser.photoURL} alt="Foto de perfil" className="w-full h-full object-cover" style={{objectFit: 'cover', width: '100%', height: '100%'}} />
+                                    </div>
+                                ) : (
+                                    <div className="w-8 h-8 rounded-full bg-brand-accent-800 flex items-center justify-center text-white font-bold text-sm">
+                                        {user.email.charAt(0).toUpperCase()}
+                                    </div>
+                                )}
+                            </button>
+                            {isMenuOpen && (
+                                <div ref={menuRef} className="absolute right-0 top-full mt-2 w-48 bg-slate-800 rounded-md shadow-lg py-1 z-[9999] border border-slate-700">
+                                    <button
+                                        onClick={() => {
+                                            const event = new CustomEvent('irCuentaDP3D');
+                                            window.dispatchEvent(event);
+                                            setMenuOpen(false);
+                                        }}
+                                        className="w-full text-left flex items-center px-4 py-2 text-sm text-brand-accent-400 hover:bg-slate-700/50"
+                                    >
+                                        <Icon name="person" className="mr-2 text-sm"/>
+                                        Mi cuenta
+                                    </button>
+                                    <button
+                                        onClick={() => {
+                                            onLogout();
+                                            setMenuOpen(false);
+                                        }}
+                                        className="w-full text-left flex items-center px-4 py-2 text-sm text-red-400 hover:bg-slate-700/50"
+                                    >
+                                       <Icon name="logout" className="mr-2 text-sm"/>
+                                       Cerrar Sesión
+                                    </button>
                                 </div>
                             )}
-                        </button>
-                        {isMenuOpen && (
-                            <div ref={menuRef} className="absolute right-0 top-full mt-2 w-48 bg-slate-800 rounded-md shadow-lg py-1 z-20 border border-slate-700">
-                                <button
-                                    onClick={() => {
-                                        const event = new CustomEvent('irCuentaDP3D');
-                                        window.dispatchEvent(event);
-                                        setMenuOpen(false);
-                                    }}
-                                    className="w-full text-left flex items-center px-4 py-2 text-sm text-brand-accent-400 hover:bg-slate-700/50"
-                                >
-                                    <Icon name="person" className="mr-2 text-sm"/>
-                                    Mi cuenta
-                                </button>
-                                <button
-                                    onClick={() => {
-                                        onLogout();
-                                        setMenuOpen(false);
-                                    }}
-                                    className="w-full text-left flex items-center px-4 py-2 text-sm text-red-400 hover:bg-slate-700/50"
-                                >
-                                   <Icon name="logout" className="mr-2 text-sm"/>
-                                   Cerrar Sesión
-                                </button>
-                            </div>
-                        )}
+                        </div>
                     </div>
                 ) : (
                     <button onClick={onLoginClick} className="bg-slate-700 hover:bg-slate-600 text-white font-bold py-2 px-4 rounded-lg transition-colors text-sm hidden sm:block">
