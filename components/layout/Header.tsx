@@ -14,6 +14,18 @@ interface HeaderProps {
 export const Header: React.FC<HeaderProps> = ({ user, onLogout, onLoginClick, onHistorialClick, onTabChange }) => {
     const [isMenuOpen, setMenuOpen] = useState(false);
     const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+    // Deshabilitar scroll de body cuando el menú hamburguesa está abierto
+    useEffect(() => {
+        if (isMobileMenuOpen) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = '';
+        }
+        return () => {
+            document.body.style.overflow = '';
+        };
+    }, [isMobileMenuOpen]);
     const menuRef = useRef<HTMLDivElement>(null);
     const triggerRef = useRef<HTMLButtonElement>(null);
 
@@ -89,12 +101,30 @@ export const Header: React.FC<HeaderProps> = ({ user, onLogout, onLoginClick, on
             </div>
             {/* Menú móvil */}
             {isMobileMenuOpen && (
-                <div id="mobile-menu-dp3d" className="fixed inset-0 z-40 bg-black bg-opacity-60 flex justify-end sm:hidden">
-                    <div className="w-64 bg-slate-900 h-full shadow-lg flex flex-col pt-8 gap-2">
-                        <button className="text-right px-6 py-2 text-slate-400 hover:text-white" onClick={() => setMobileMenuOpen(false)}>
+                <div
+                    id="mobile-menu-dp3d"
+                    className="fixed inset-0 z-40 bg-black bg-opacity-60 flex justify-end sm:hidden"
+                    onClick={e => {
+                        // Solo cerrar si se hace clic en el overlay, no en el menú
+                        if (e.target === e.currentTarget) setMobileMenuOpen(false);
+                    }}
+                >
+                    <div className="w-64 bg-slate-900 h-full shadow-lg flex flex-col pt-8 gap-2 overflow-y-auto" style={{maxHeight: '100vh'}}>
+                        <button className="self-end px-6 py-2 text-slate-400 hover:text-white" onClick={() => setMobileMenuOpen(false)}>
                             <Icon name="close" className="text-2xl" />
                         </button>
                         <nav className="flex flex-col gap-2 px-6">
+                            {user && (
+                                <div className="flex flex-col items-center mb-4">
+                                    {auth.currentUser?.photoURL ? (
+                                        <img src={auth.currentUser.photoURL} alt="Foto de perfil" className="w-16 h-16 rounded-full object-cover mb-2" />
+                                    ) : (
+                                        <div className="w-16 h-16 rounded-full bg-brand-accent-800 flex items-center justify-center text-white font-bold text-xl mb-2">
+                                            {user.email.charAt(0).toUpperCase()}
+                                        </div>
+                                    )}
+                                </div>
+                            )}
                             <button className="text-lg text-white font-medium text-left py-2 hover:text-brand-accent-400" onClick={() => { onTabChange ? onTabChange('keychain') : window.dispatchEvent(new CustomEvent('irHomeDP3D')); setMobileMenuOpen(false); }}>Llaveros</button>
                             <button className="text-lg text-white font-medium text-left py-2 hover:text-brand-accent-400" onClick={() => { onTabChange ? onTabChange('general') : window.dispatchEvent(new CustomEvent('irGeneralDP3D')); setMobileMenuOpen(false); }}>General</button>
                             <button className="text-lg text-white font-medium text-left py-2 hover:text-brand-accent-400" onClick={() => { onTabChange ? onTabChange('costs') : window.dispatchEvent(new CustomEvent('irCostosDP3D')); setMobileMenuOpen(false); }}>Costos</button>
