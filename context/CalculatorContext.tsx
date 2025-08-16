@@ -170,7 +170,7 @@ export const CalculatorProvider: React.FC<{ children: React.ReactNode }> = ({ ch
     }, []);
 
     // Referencia para resetear los inputs desde fuera
-    const resetInputsRef = React.useRef<() => void>();
+    const resetInputsRef = React.useRef<(() => void) | null>(null);
     const setResetInputs = (fn: () => void) => {
         resetInputsRef.current = fn;
     };

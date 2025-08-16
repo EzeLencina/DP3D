@@ -16,13 +16,14 @@ export const GeneralCalculator: React.FC = () => {
         return value.toLocaleString('es-ES', { style: 'currency', currency: country.code });
     }
     const [inputs, setInputs] = useState<GeneralInputs>({
-        grams: '',
-        hours: '',
-    } as any);
+        grams: 0,
+        hours: 0,
+    });
     const [isLoading, setIsLoading] = useState(false);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setInputs({ ...inputs, [e.target.name]: e.target.value });
+        const { name, value } = e.target;
+        setInputs({ ...inputs, [name]: value === '' ? 0 : parseFloat(value) });
     };
 
     const handleSubmit = (e: React.FormEvent) => {
@@ -30,15 +31,15 @@ export const GeneralCalculator: React.FC = () => {
         setIsLoading(true);
         setTimeout(() => {
             calculateGeneral({
-                grams: parseFloat(inputs.grams) || 0,
-                hours: parseFloat(inputs.hours) || 0,
+                grams: inputs.grams,
+                hours: inputs.hours,
             });
             setIsLoading(false);
         }, 500);
     };
     
     const handleReset = () => {
-        setInputs({ grams: '', hours: '' });
+        setInputs({ grams: 0, hours: 0 });
         resetCalculator();
     };
 

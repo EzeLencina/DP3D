@@ -36,7 +36,8 @@ export const ResultsDisplay: React.FC<ResultsDisplayProps> = ({ user }) => {
         whatsapp: '',
         mail: '',
         instagram: '',
-        fechaEntrega: ''
+        fechaEntrega: '',
+        descripcionProducto: ''
     });
     const [loading, setLoading] = React.useState(false);
     const [error, setError] = React.useState('');
@@ -44,7 +45,7 @@ export const ResultsDisplay: React.FC<ResultsDisplayProps> = ({ user }) => {
     return value.toLocaleString('es-ES', { style: 'currency', currency: country.code });
     };
 
-    const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleInput = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         setForm({ ...form, [e.target.name]: e.target.value });
     };
 
@@ -72,7 +73,7 @@ export const ResultsDisplay: React.FC<ResultsDisplayProps> = ({ user }) => {
             });
             console.log('Pedido guardado correctamente con ID:', docRef.id);
             setModalOpen(false);
-            setForm({ nombre: '', whatsapp: '', mail: '', instagram: '', fechaEntrega: '' });
+            setForm({ nombre: '', whatsapp: '', mail: '', instagram: '', fechaEntrega: '', descripcionProducto: '' });
             // Limpiar resultados y inputs de la calculadora
             if (typeof resetCalculator === 'function') resetCalculator();
             if (typeof resetInputs === 'function') resetInputs();
@@ -85,7 +86,7 @@ export const ResultsDisplay: React.FC<ResultsDisplayProps> = ({ user }) => {
 
     if (!isCalculated) {
         return (
-            <Card className="sticky top-8" style={{ height: '410px' }}>
+            <Card className="sticky top-8 min-h-[410px]">
                 <div className="text-center py-16">
                     <Icon name="calculate" className="text-6xl text-slate-500 mx-auto" />
                     <h3 className="mt-4 text-xl font-bold text-white">Resultados</h3>
@@ -117,13 +118,13 @@ export const ResultsDisplay: React.FC<ResultsDisplayProps> = ({ user }) => {
                      <ResultRow icon="timer" label="Tiempo Total de Impresión" value={`${results.totalPrintingHours.toFixed(2)} h`} />
                      <ResultRow icon="calendar_month" label="Días de impresión" value={`${results.printingDays.toFixed(2)}`} />
                      <ResultRow icon="scale" label="Filamento Total Usado" value={`${results.totalFilamentUsed.toFixed(2)} g`} />
-                     <ResultRow icon="monetization_on" label="Costo de Filamento" value={formatCurrency(results.filamentCost)} />
+                     <ResultRow icon="paid" label="Costo de Filamento" value={formatCurrency(results.filamentCost)} />
                      <ResultRow icon="swap_horiz" label="Cambios de Filamento" value={`${results.purgeChanges}`} isVisible={results.purgeChanges > 0} />
                      <ResultRow icon="recycling" label="Costo de purga" value={formatCurrency(results.purgeCost)} isVisible={results.purgeCost > 0} />
-                     <ResultRow icon="colors" label="Costo Por Cambio de Color" value={formatCurrency(results.colorChangeCost)} isVisible={results.colorChangeCost > 0} />
+                     <ResultRow icon="palette" label="Costo Por Cambio de Color" value={formatCurrency(results.colorChangeCost)} isVisible={results.colorChangeCost > 0} />
                      <ResultRow icon="toll" label="Costo de arandelas" value={formatCurrency(results.washerCost)} isVisible={results.washerCost > 0}/>
                      <ResultRow icon="key" label="Cantidad Total de Llaveros" value={`${results.totalKeychains}`} isVisible={results.totalKeychains > 0} />
-                     <ResultRow icon="attach_money" label="Costo por unidad" value={formatCurrency(results.costPerUnit)} isVisible={results.costPerUnit > 0} />
+                     <ResultRow icon="paid" label="Costo por unidad" value={formatCurrency(results.costPerUnit)} isVisible={results.costPerUnit > 0} />
                      <ResultRow icon="trending_up" label="Rentabilidad" value={`${results.profitPercentage.toFixed(2)}%`} />
                 </div>
             </div>
@@ -161,7 +162,7 @@ export const ResultsDisplay: React.FC<ResultsDisplayProps> = ({ user }) => {
                 {error && <div className="text-red-400 text-sm">{error}</div>}
                 <div className="flex justify-end gap-2 mt-4">
                     <Button type="button" className="bg-slate-700" onClick={() => setModalOpen(false)}>Cancelar</Button>
-                    <Button type="submit" icon="check" disabled={loading}>{loading ? 'Guardando...' : 'Confirmar'}</Button>
+                    <Button type="submit" icon="check_circle" disabled={loading}>{loading ? 'Guardando...' : 'Confirmar'}</Button>
                 </div>
             </form>
         </Modal>

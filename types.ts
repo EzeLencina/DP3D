@@ -6,7 +6,8 @@ export type TabId =
     | 'encola'
     | 'imprimiendo'
     | 'historial'
-    | 'novedades';
+    | 'novedades'
+    | 'account';
 
 export interface Tab {
     id: TabId;
