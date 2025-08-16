@@ -1,6 +1,7 @@
 import React, { useState, useCallback, useEffect } from 'react';
-import { auth } from './firebase';
+import { auth, db } from './firebase';
 import { onAuthStateChanged, setPersistence, browserLocalPersistence } from 'firebase/auth';
+import { doc, getDoc } from 'firebase/firestore';
 import { Header } from './components/layout/Header';
 import { TabNavigation } from './components/tabs/TabNavigation';
 import { KeychainCalculator } from './components/tabs/KeychainCalculator';
@@ -15,6 +16,7 @@ import AuthModal from './components/auth/AuthModal';
 import { Historial } from './components/tabs/Historial';
 import { EnCola } from './components/tabs/EnCola';
 import { Imprimiendo } from './components/tabs/Imprimiendo';
+import PublicarNovedades from './components/tabs/PublicarNovedades';
 import { Novedades } from './components/tabs/Novedades';
 import { Account } from './components/tabs/Account';
 
@@ -27,9 +29,12 @@ const App: React.FC = () => {
     // Persistencia de sesión Firebase
     useEffect(() => {
         setPersistence(auth, browserLocalPersistence);
-        const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
+        const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
             if (firebaseUser) {
-                setUser({ email: firebaseUser.email });
+                // Consultar Firestore para saber si es admin
+                const userDoc = await getDoc(doc(db, 'users', firebaseUser.uid));
+                const userData = userDoc.exists() ? userDoc.data() : {};
+                setUser({ email: firebaseUser.email, admin: userData.admin === true });
                 setAuthModalOpen(false);
             } else {
                 setUser(null);
@@ -76,8 +81,8 @@ const App: React.FC = () => {
                 return user ? <Imprimiendo user={user} /> : null;
             case 'historial':
                 return user ? <Historial user={user} /> : null;
-            case 'novedades':
-                return <Novedades />;
+                        case 'novedades':
+                            return <Novedades user={user} />;
             case 'account':
                 return user ? <Account user={user} onClose={() => setActiveTab('keychain')} /> : null;
             default:

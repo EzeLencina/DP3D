@@ -67,6 +67,7 @@ export interface CalculationResults {
 
 export interface User {
     email: string;
+    admin?: boolean;
     // Add other user properties if needed
 }
 
