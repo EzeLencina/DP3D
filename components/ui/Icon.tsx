@@ -51,7 +51,6 @@ interface IconProps {
 
 export const Icon: React.FC<IconProps> = ({ name, className, style }) => {
     const icons: Record<string, React.ReactNode> = {
-        check_circle: <CheckCircle className={className} style={style} />, 
             add_shopping_cart: <AddShoppingCart className={className} style={style} />,
             done: <Done className={className} style={style} />,
             straighten: <Straighten className={className} style={style} />,
@@ -90,7 +89,8 @@ export const Icon: React.FC<IconProps> = ({ name, className, style }) => {
             inventory: <Inventory className={className} style={style} />,
             view_in_ar: <ViewInAr className={className} style={style} />,
             palette: <Palette className={className} style={style} />,
-            refresh: <Refresh className={className} style={style} />
+        refresh: <Refresh className={className} style={style} />,
+        check_circle: <CheckCircle className={className} style={style} />
         };
         return icons[name] || <span className={className} style={style}>{name}</span>;
 };
