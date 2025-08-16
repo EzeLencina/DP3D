@@ -16,6 +16,7 @@ import { Historial } from './components/tabs/Historial';
 import { EnCola } from './components/tabs/EnCola';
 import { Imprimiendo } from './components/tabs/Imprimiendo';
 import { Novedades } from './components/tabs/Novedades';
+import { Account } from './components/tabs/Account';
 
 const App: React.FC = () => {
     const [activeTab, setActiveTab] = useState<TabId>('keychain');
@@ -39,9 +40,13 @@ const App: React.FC = () => {
         // Listener para ir al home (calculadora de llaveros)
         const irHomeListener = () => setActiveTab('keychain');
         window.addEventListener('irHomeDP3D', irHomeListener);
+        // Listener para ir a la cuenta
+        const irCuentaListener = () => setActiveTab('account');
+        window.addEventListener('irCuentaDP3D', irCuentaListener);
         return () => {
             unsubscribe();
             window.removeEventListener('irHomeDP3D', irHomeListener);
+            window.removeEventListener('irCuentaDP3D', irCuentaListener);
         };
     }, []);
 
@@ -73,6 +78,8 @@ const App: React.FC = () => {
                 return user ? <Historial user={user} /> : null;
             case 'novedades':
                 return <Novedades />;
+            case 'account':
+                return user ? <Account user={user} onClose={() => setActiveTab('keychain')} /> : null;
             default:
                 return <KeychainCalculator />;
         }

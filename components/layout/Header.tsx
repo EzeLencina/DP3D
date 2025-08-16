@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import type { User } from '../../types';
+import { auth } from '../../firebase';
 import { Icon } from '../ui/Icon';
 
 interface HeaderProps {
@@ -11,6 +12,26 @@ interface HeaderProps {
 
 export const Header: React.FC<HeaderProps> = ({ user, onLogout, onLoginClick, onHistorialClick }) => {
     const [isMenuOpen, setMenuOpen] = useState(false);
+    const menuRef = useRef<HTMLDivElement>(null);
+    const triggerRef = useRef<HTMLButtonElement>(null);
+
+    useEffect(() => {
+        if (!isMenuOpen) return;
+        const handleClickOutside = (event: MouseEvent) => {
+            if (
+                menuRef.current &&
+                !menuRef.current.contains(event.target as Node) &&
+                triggerRef.current &&
+                !triggerRef.current.contains(event.target as Node)
+            ) {
+                setMenuOpen(false);
+            }
+        };
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, [isMenuOpen]);
     // Extraer la prop correctamente desde los props
     // Recibe onHistorialClick como prop
     // ...existing code...
@@ -44,14 +65,32 @@ export const Header: React.FC<HeaderProps> = ({ user, onLogout, onLoginClick, on
                         <button 
                             onClick={() => setMenuOpen(!isMenuOpen)}
                             className="flex items-center gap-2 p-2 rounded-lg hover:bg-slate-800 transition-colors"
+                            ref={triggerRef}
                         >
                             <span className="font-medium text-sm text-slate-300 hidden sm:inline">{user.email}</span>
-                            <div className="w-8 h-8 rounded-full bg-brand-accent-800 flex items-center justify-center text-white font-bold text-sm">
-                                {user.email.charAt(0).toUpperCase()}
-                            </div>
+                            {auth.currentUser?.photoURL ? (
+                                <div className="w-8 h-8 rounded-full overflow-hidden flex items-center justify-center bg-slate-800">
+                                    <img src={auth.currentUser.photoURL} alt="Foto de perfil" className="w-full h-full object-cover" style={{objectFit: 'cover', width: '100%', height: '100%'}} />
+                                </div>
+                            ) : (
+                                <div className="w-8 h-8 rounded-full bg-brand-accent-800 flex items-center justify-center text-white font-bold text-sm">
+                                    {user.email.charAt(0).toUpperCase()}
+                                </div>
+                            )}
                         </button>
                         {isMenuOpen && (
-                             <div className="absolute right-0 mt-12 w-48 bg-slate-800 rounded-md shadow-lg py-1 z-20 border border-slate-700">
+                            <div ref={menuRef} className="absolute right-0 top-full mt-2 w-48 bg-slate-800 rounded-md shadow-lg py-1 z-20 border border-slate-700">
+                                <button
+                                    onClick={() => {
+                                        const event = new CustomEvent('irCuentaDP3D');
+                                        window.dispatchEvent(event);
+                                        setMenuOpen(false);
+                                    }}
+                                    className="w-full text-left flex items-center px-4 py-2 text-sm text-brand-accent-400 hover:bg-slate-700/50"
+                                >
+                                    <Icon name="person" className="mr-2 text-sm"/>
+                                    Mi cuenta
+                                </button>
                                 <button
                                     onClick={() => {
                                         onLogout();
