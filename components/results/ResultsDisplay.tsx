@@ -5,6 +5,7 @@ import { Card } from '../ui/Card';
 import { Icon } from '../ui/Icon';
 import { Button } from '../ui/Button';
 import { Modal } from '../ui/Modal';
+import { useCurrency } from '../../context/CurrencyContext';
 
 const ResultRow: React.FC<{ icon: string; label: string; value: string; isVisible?: boolean, className?: string }> = ({ icon, label, value, isVisible = true, className = 'text-white' }) => {
     if (!isVisible) return null;
@@ -28,6 +29,7 @@ interface ResultsDisplayProps {
 export const ResultsDisplay: React.FC<ResultsDisplayProps> = ({ user }) => {
     const { state, resetCalculator, resetInputs } = useCalculator();
     const { results, isCalculated } = state;
+    const { country, rate } = useCurrency();
     const [modalOpen, setModalOpen] = React.useState(false);
     const [form, setForm] = React.useState({
         nombre: '',
@@ -39,7 +41,7 @@ export const ResultsDisplay: React.FC<ResultsDisplayProps> = ({ user }) => {
     const [loading, setLoading] = React.useState(false);
     const [error, setError] = React.useState('');
     const formatCurrency = (value: number) => {
-        return value.toLocaleString('es-AR', { style: 'currency', currency: 'ARS' });
+    return value.toLocaleString('es-ES', { style: 'currency', currency: country.code });
     };
 
     const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {

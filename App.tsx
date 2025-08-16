@@ -20,6 +20,8 @@ import PublicarNovedades from './components/tabs/PublicarNovedades';
 import { Novedades } from './components/tabs/Novedades';
 import { Account } from './components/tabs/Account';
 
+import { CurrencyProvider } from './context/CurrencyContext';
+
 const App: React.FC = () => {
     const [activeTab, setActiveTab] = useState<TabId>('keychain');
     const [user, setUser] = useState<User | null>(null);
@@ -146,4 +148,10 @@ const App: React.FC = () => {
     );
 };
 
-export default App;
+export default function AppWithCurrency() {
+    return (
+        <CurrencyProvider>
+            <App />
+        </CurrencyProvider>
+    );
+}

@@ -11,21 +11,21 @@ export const TABS: Tab[] = [
 ];
 
 export const INITIAL_COSTS: CostSettings = {
-    filamentCostPerKg: 25000,
-    laborCostPerHour: 850,
-    washerCost: 7500,
+    filamentCostPerKg: 0,
+    laborCostPerHour: 0,
+    washerCost: 0,
     washerQuantity: 100,
     washerProfit: false,
-    washerProfitPercent: 10,
-    profitMargin: 20,
-    purgeMm: 70, // Example value
-    purgeMmCost: 2.5, // Example cost per mm
+    washerProfitPercent: 0,
+    profitMargin: 0,
+    purgeMm: 0,
+    purgeMmCost: 0,
     purgeChangesCount: 0,
     mmPerGram: 330, // Example for PLA
     filamentDiameter: 1.75,
     filamentDensity: 1.24,
-    printerPowerWatts: 250, // Average printer power
-    electricityCostKwh: 50, // Example cost
+    printerPowerWatts: 0,
+    electricityCostKwh: 0,
 };
 
 export const INITIAL_RESULTS: CalculationResults = {

@@ -1,5 +1,6 @@
 
 import React, { useState } from 'react';
+import { useCurrency } from '../../context/CurrencyContext';
 import { useCalculator } from '../../context/CalculatorContext';
 import { Card } from '../ui/Card';
 import { Input } from '../ui/Input';
@@ -8,6 +9,12 @@ import type { GeneralInputs } from '../../types';
 
 export const GeneralCalculator: React.FC = () => {
     const { calculateGeneral, resetCalculator } = useCalculator();
+    // import { useCurrency } from '../../context/CurrencyContext';
+    const { country, rate } = useCurrency();
+    // Función para mostrar el costo convertido
+    const formatCurrency = (value: number) => {
+        return value.toLocaleString('es-ES', { style: 'currency', currency: country.code });
+    }
     const [inputs, setInputs] = useState<GeneralInputs>({
         grams: '',
         hours: '',

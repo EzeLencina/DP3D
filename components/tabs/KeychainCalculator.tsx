@@ -1,6 +1,7 @@
 import './KeychainCalculator.css';
 
 import React, { useState } from 'react';
+import { useCurrency } from '../../context/CurrencyContext';
 import { useCalculator } from '../../context/CalculatorContext';
 import { Card } from '../ui/Card';
 import { Input } from '../ui/Input';
@@ -10,6 +11,7 @@ import type { KeychainInputs } from '../../types';
 
 export const KeychainCalculator: React.FC = () => {
     const { calculateKeychain, resetCalculator, state, updateCosts, setResetInputs } = useCalculator();
+    const { country, rate } = useCurrency();
     const [inputs, setInputs] = useState<KeychainInputs>({
         hoursPerBed: 0,
         gramsPerBed: 0,
@@ -21,6 +23,10 @@ export const KeychainCalculator: React.FC = () => {
 
     // Costos generales editables desde aquí
     const costs = state.costs;
+    // Función para mostrar el costo convertido
+    const formatCurrency = (value: number) => {
+        return value.toLocaleString('es-ES', { style: 'currency', currency: country.code });
+    }
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value, type, checked } = e.target;
@@ -82,14 +88,14 @@ export const KeychainCalculator: React.FC = () => {
                     <Input label="Gramos por Cama" id="gramsPerBed" name="gramsPerBed" type="number" min="0" step="0.1" value={inputs.gramsPerBed === 0 ? '' : inputs.gramsPerBed} onChange={handleChange} icon="scale" unit="g" required placeholder="0" />
                     <Input label="Llaveros por Cama" id="keychainsPerBed" name="keychainsPerBed" type="number" min="0" value={inputs.keychainsPerBed === 0 ? '' : inputs.keychainsPerBed} onChange={handleChange} icon="inventory" unit="un." required placeholder="0" />
                     <Input label="Cantidad de Camas" id="numberOfBeds" name="numberOfBeds" type="number" min="1" value={inputs.numberOfBeds === 0 ? '' : inputs.numberOfBeds} onChange={handleChange} icon="view_in_ar" unit="veces" required placeholder="0" />
-                        <Select label="Cantidad de Colores" id="colorCount" name="colorCount" value={inputs.colorCount} onChange={handleChange} icon="palette" required containerClassName="md:col-span-2 custom-select-bg">
-                            {inputs.colorCount === '' && (
-                                <option value="" disabled hidden>Selecciona Cantidad de Colores</option>
-                            )}
-                            <option value="2">2 Colores</option>
-                            <option value="3">3 Colores</option>
-                            <option value="4">4 Colores</option>
-                        </Select>
+                    <Select label="Cantidad de Colores" id="colorCount" name="colorCount" value={inputs.colorCount} onChange={handleChange} icon="palette" required containerClassName="md:col-span-2 custom-select-bg">
+                        {inputs.colorCount === '' && (
+                            <option value="" disabled hidden>Selecciona Cantidad de Colores</option>
+                        )}
+                        <option value="2">2 Colores</option>
+                        <option value="3">3 Colores</option>
+                        <option value="4">4 Colores</option>
+                    </Select>
                 </div>
                 <div className="flex flex-col sm:flex-row gap-4 pt-4 border-t border-slate-700">
                     <Button type="button" onClick={handleReset} variant="secondary" icon="refresh">Resetear</Button>

@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import type { User } from '../../types';
 import { auth } from '../../firebase';
 import { Icon } from '../ui/Icon';
+import { useCurrency, COUNTRIES } from '../../context/CurrencyContext';
 
 interface HeaderProps {
     user: User | null;
@@ -12,6 +13,7 @@ interface HeaderProps {
 }
 
 export const Header: React.FC<HeaderProps> = ({ user, onLogout, onLoginClick, onHistorialClick, onTabChange }) => {
+    const { country, setCountry, loading } = useCurrency();
     const [isMenuOpen, setMenuOpen] = useState(false);
     const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -87,6 +89,25 @@ export const Header: React.FC<HeaderProps> = ({ user, onLogout, onLoginClick, on
                     DP3D
                 </button>
             </div>
+            {/* Selector de país/divisa centrado */}
+            <div className="flex items-center justify-center flex-1 sm:hidden">
+                <select
+                    className="flex items-center gap-2 px-3 py-2 rounded-lg bg-slate-800 text-white font-medium focus:outline-none border border-slate-700 hover:bg-slate-700 transition-colors mx-auto"
+                    value={country.code}
+                    onChange={e => {
+                        const selected = COUNTRIES.find(c => c.code === e.target.value);
+                        if (selected) setCountry(selected);
+                    }}
+                    style={{ minWidth: 80, maxWidth: 120 }}
+                    title="Selecciona país/divisa"
+                >
+                    {COUNTRIES.map(c => (
+                        <option key={c.code} value={c.code}>
+                            {c.code} {c.symbol && `(${c.symbol})`}
+                        </option>
+                    ))}
+                </select>
+            </div>
             {/* Bloque derecho: solo hamburguesa en móvil, alineado a la derecha */}
             <div className="flex items-center sm:hidden w-auto" style={{minWidth: '80px'}}>
                 <div className="flex-grow" />
@@ -113,6 +134,25 @@ export const Header: React.FC<HeaderProps> = ({ user, onLogout, onLoginClick, on
                         <button className="self-end px-6 py-2 text-slate-400 hover:text-white" onClick={() => setMobileMenuOpen(false)}>
                             <Icon name="close" className="text-2xl" />
                         </button>
+                        {/* Selector de país/divisa solo en móvil, centrado y con separación visual */}
+                        <div className="w-full flex justify-center items-center sm:hidden mb-4 mt-2">
+                            <select
+                                className="flex items-center gap-2 px-3 py-2 rounded-lg bg-slate-800 text-white font-medium focus:outline-none border border-slate-700 hover:bg-slate-700 transition-colors shadow-md"
+                                value={country.code}
+                                onChange={e => {
+                                    const selected = COUNTRIES.find(c => c.code === e.target.value);
+                                    if (selected) setCountry(selected);
+                                }}
+                                style={{ minWidth: 80 }}
+                                title="Selecciona país/divisa"
+                            >
+                                {COUNTRIES.map(c => (
+                                    <option key={c.code} value={c.code}>
+                                        {c.code} {c.symbol && `(${c.symbol})`}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
                         <nav className="flex flex-col gap-2 px-6">
                             {user && (
                                 <div className="flex flex-col items-center mb-4">
@@ -163,6 +203,24 @@ export const Header: React.FC<HeaderProps> = ({ user, onLogout, onLoginClick, on
                             <Icon name="history" className="text-lg" />
                             Historial
                         </button>
+                        {/* Selector de país/divisa con bandera y conversión */}
+                        <div className="relative hidden sm:block">
+                            <select
+                                className="flex items-center gap-2 px-3 py-2 rounded-lg bg-slate-800 text-white font-medium focus:outline-none border border-slate-700 hover:bg-slate-700 transition-colors"
+                                value={country.code}
+                                onChange={e => {
+                                    const selected = COUNTRIES.find(c => c.code === e.target.value);
+                                    if (selected) setCountry(selected);
+                                }}
+                                title="Selecciona país/divisa"
+                            >
+                                {COUNTRIES.map(c => (
+                                    <option key={c.code} value={c.code}>
+                                        {c.code} {c.symbol && `(${c.symbol})`}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
                         {/* Botón mail + foto: muestra menú de cuenta al hacer clic en cualquier parte */}
                         <div className="relative">
                             <button 
@@ -177,43 +235,25 @@ export const Header: React.FC<HeaderProps> = ({ user, onLogout, onLoginClick, on
                                         <img src={auth.currentUser.photoURL} alt="Foto de perfil" className="w-full h-full object-cover" style={{objectFit: 'cover', width: '100%', height: '100%'}} />
                                     </div>
                                 ) : (
-                                    <div className="w-8 h-8 rounded-full bg-brand-accent-800 flex items-center justify-center text-white font-bold text-sm">
+                                    <div className="w-8 h-8 rounded-full bg-brand-accent-800 flex items-center justify-center text-white font-bold text-lg">
                                         {user.email.charAt(0).toUpperCase()}
                                     </div>
                                 )}
                             </button>
+                            {/* Menú de cuenta */}
                             {isMenuOpen && (
-                                <div ref={menuRef} className="absolute right-0 top-full mt-2 w-48 bg-slate-800 rounded-md shadow-lg py-1 z-[9999] border border-slate-700">
-                                    <button
-                                        onClick={() => {
-                                            const event = new CustomEvent('irCuentaDP3D');
-                                            window.dispatchEvent(event);
-                                            setMenuOpen(false);
-                                        }}
-                                        className="w-full text-left flex items-center px-4 py-2 text-sm text-brand-accent-400 hover:bg-slate-700/50"
-                                    >
-                                        <Icon name="person" className="mr-2 text-sm"/>
-                                        Mi cuenta
+                                <div ref={menuRef} className="absolute right-0 mt-2 w-48 bg-slate-900 rounded-lg shadow-lg py-2 z-50 border border-slate-700">
+                                    <button className="w-full text-left flex items-center gap-2 px-4 py-2 text-brand-accent-400 hover:bg-slate-800" onClick={() => { window.dispatchEvent(new CustomEvent('irCuentaDP3D')); setMenuOpen(false); }}>
+                                        <Icon name="person" className="text-lg" /> Mi cuenta
                                     </button>
-                                    <button
-                                        onClick={() => {
-                                            onLogout();
-                                            setMenuOpen(false);
-                                        }}
-                                        className="w-full text-left flex items-center px-4 py-2 text-sm text-red-400 hover:bg-slate-700/50"
-                                    >
-                                       <Icon name="logout" className="mr-2 text-sm"/>
-                                       Cerrar Sesión
+                                    <button className="w-full text-left flex items-center gap-2 px-4 py-2 text-red-400 hover:bg-slate-800" onClick={() => { onLogout(); setMenuOpen(false); }}>
+                                        <Icon name="logout" className="text-lg" /> Cerrar Sesión
                                     </button>
                                 </div>
                             )}
                         </div>
                     </div>
-                ) : (
-                    <button onClick={onLoginClick} className="bg-slate-700 hover:bg-slate-600 text-white font-bold py-2 px-4 rounded-lg transition-colors text-sm hidden sm:block">
-                        Login
-                    </button>
-                )}
+                ) : null}
         </header>
     );
 };
