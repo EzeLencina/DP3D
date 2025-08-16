@@ -134,6 +134,7 @@ export const ResultsDisplay: React.FC<ResultsDisplayProps> = ({ user }) => {
         </Card>
         {/* Modal para agendar pedido */}
         <Modal isOpen={modalOpen} onClose={() => setModalOpen(false)} title="Agendar Pedido" size="md">
+            <div className="bg-slate-800/50 rounded-xl shadow-lg p-3 sm:p-4 backdrop-blur-sm w-full max-w-3xl mx-auto">
             <form className="space-y-4" onSubmit={e => { e.preventDefault(); handleSubmit(); }}>
                 <div>
                     <label className="block text-sm text-white mb-1">Nombre del cliente *</label>
@@ -165,6 +166,7 @@ export const ResultsDisplay: React.FC<ResultsDisplayProps> = ({ user }) => {
                     <Button type="submit" icon="check_circle" disabled={loading}>{loading ? 'Guardando...' : 'Confirmar'}</Button>
                 </div>
             </form>
+            </div>
         </Modal>
         </>
     );

@@ -1,6 +1,9 @@
 
 import React from 'react';
 import {
+    PersonAdd,
+    Login,
+    Lock,
     CheckCircle,
     AddShoppingCart,
     Done,
@@ -51,6 +54,9 @@ interface IconProps {
 
 export const Icon: React.FC<IconProps> = ({ name, className, style }) => {
     const icons: Record<string, React.ReactNode> = {
+        person_add: <PersonAdd className={className} style={style} />, 
+        login: <Login className={className} style={style} />, 
+        lock: <Lock className={className} style={style} />, 
             add_shopping_cart: <AddShoppingCart className={className} style={style} />,
             done: <Done className={className} style={style} />,
             straighten: <Straighten className={className} style={style} />,

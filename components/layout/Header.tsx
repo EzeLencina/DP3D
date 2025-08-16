@@ -92,7 +92,7 @@ export const Header: React.FC<HeaderProps> = ({ user, onLogout, onLoginClick, on
             {/* Selector de país/divisa centrado */}
             <div className="flex items-center justify-center flex-1 sm:hidden">
                 <select
-                    className="flex items-center gap-2 px-3 py-2 rounded-lg bg-slate-800 text-white font-medium focus:outline-none border border-slate-700 hover:bg-slate-700 transition-colors mx-auto"
+                    className="flex items-center gap-2 px-3 py-2 rounded-lg bg-slate-800 text-white font-medium focus:outline-none border border-slate-700 hover:bg-slate-700 transition-colors max-w-[180px] mx-auto"
                     value={country.code}
                     onChange={e => {
                         const selected = COUNTRIES.find(c => c.code === e.target.value);
@@ -137,7 +137,7 @@ export const Header: React.FC<HeaderProps> = ({ user, onLogout, onLoginClick, on
                         {/* Selector de país/divisa solo en móvil, centrado y con separación visual */}
                         <div className="w-full flex justify-center items-center sm:hidden mb-4 mt-2">
                             <select
-                                className="flex items-center gap-2 px-3 py-2 rounded-lg bg-slate-800 text-white font-medium focus:outline-none border border-slate-700 hover:bg-slate-700 transition-colors shadow-md"
+                                className="flex items-center gap-2 px-3 py-2 rounded-lg bg-slate-800 text-white font-medium focus:outline-none border border-slate-700 hover:bg-slate-700 transition-colors shadow-md max-w-[180px]"
                                 value={country.code}
                                 onChange={e => {
                                     const selected = COUNTRIES.find(c => c.code === e.target.value);
@@ -206,7 +206,7 @@ export const Header: React.FC<HeaderProps> = ({ user, onLogout, onLoginClick, on
                         {/* Selector de país/divisa con bandera y conversión */}
                         <div className="relative hidden sm:block">
                             <select
-                                className="flex items-center gap-2 px-3 py-2 rounded-lg bg-slate-800 text-white font-medium focus:outline-none border border-slate-700 hover:bg-slate-700 transition-colors"
+                                className="flex items-center gap-2 px-3 py-2 rounded-lg bg-slate-800 text-white font-medium focus:outline-none border border-slate-700 hover:bg-slate-700 transition-colors max-w-[180px]"
                                 value={country.code}
                                 onChange={e => {
                                     const selected = COUNTRIES.find(c => c.code === e.target.value);
