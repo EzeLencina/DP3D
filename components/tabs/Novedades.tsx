@@ -51,6 +51,7 @@ export const Novedades: React.FC<NovedadesProps> = ({ user }) => {
 
     return (
         <div className="w-full max-w-2xl mx-auto mt-8">
+            {/* Formulario solo para admin */}
             {user?.admin && (
                 <div className="bg-slate-800 rounded-lg p-6 mb-8 shadow">
                     <h2 className="text-xl font-bold mb-4 text-white">Publicar novedades</h2>
@@ -82,11 +83,13 @@ export const Novedades: React.FC<NovedadesProps> = ({ user }) => {
                     {message && <p className="mt-4 text-brand-accent-400">{message}</p>}
                 </div>
             )}
+            {/* Título centrado para todos los usuarios */}
             <div className="w-full flex justify-center mb-6">
                 <div className="bg-slate-800 rounded-lg px-8 py-4 shadow w-full max-w-2xl">
                     <h2 className="text-3xl font-bold text-brand-accent-400 text-center" style={{ fontFamily: 'DM Sans, sans-serif' }}>Novedades</h2>
                 </div>
             </div>
+            {/* Novedades para todos los usuarios */}
             <div className="flex flex-col gap-6">
                 {updates.map(update => {
                     let fecha = '';
