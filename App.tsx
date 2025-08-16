@@ -104,11 +104,14 @@ const App: React.FC = () => {
                         onLogout={handleLogout}
                         onLoginClick={() => setAuthModalOpen(true)}
                         onHistorialClick={handleHistorialClick}
+                        onTabChange={setActiveTab}
                     />
                     {user ? (
                         <main className="mt-8 flex flex-col gap-8 items-start">
                             <div className="w-full">
-                                <TabNavigation tabs={TABS} activeTab={activeTab} setActiveTab={setActiveTab} />
+                                <div className="hidden sm:block">
+                                    <TabNavigation tabs={TABS} activeTab={activeTab} setActiveTab={setActiveTab} />
+                                </div>
                                 <div className="mt-6 w-full">
                                     {(activeTab === 'keychain' || activeTab === 'general') ? (
                                         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 w-full">
